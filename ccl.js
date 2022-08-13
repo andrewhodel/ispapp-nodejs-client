@@ -114,14 +114,16 @@ ccl_client.prototype.make_config_request = function() {
 
 								sendAt = Date.now() + (1000 * sendOffset);
 
-								if (this.config_res_json.updateFast === true) {
+								if (u_json.updateFast === true) {
 									// update fast
 									sendAt = Date.now() + 1000;
 								}
 
 								//console.log('set sendAt to', sendAt);
+								//console.log('next update request in ', (sendAt-Date.now()) + 'ms');
 
 							} catch (err) {
+								console.error('error parsing update response', err);
 							}
 
 						}.bind({config_res_json: this.config_res_json}));
