@@ -64,7 +64,7 @@ ccl_client.prototype.make_config_request = function() {
 				this.lastUpdate = Date.now();
 
 				var sendAt = 0;
-				this.ccl_client.updateIntervalTimer = setInterval(function() {
+				this.ccl_client.updateTimer = setInterval(function() {
 
 					//console.log(Date.now(), sendAt, sendAt-Date.now());
 					if (Date.now() < sendAt) {
@@ -157,21 +157,25 @@ ccl_client.prototype.make_config_request = function() {
 
 ccl_client.prototype.stop = function() {
 
+	clearInterval(this.updateTimer);
+	this.updateTimer = null;
 	console.log('collect client stopped');
-	clearInterval(this.updateIntervalTimer);
 
 }
 
 ccl_client.prototype.start = function() {
 
-	console.log('collect client started');
-	this.make_config_request();
+	if (this.updateTimer === null) {
+		this.updateTimer = -1;
+		this.make_config_request();
+		console.log('collect client started');
+	}
 
 }
 
 ccl_client.prototype.status = function() {
-	if (Date.now() - this.lastUpdate > 1000 * 60 * 5) {
-		// 5 minutes has passed since an update
+	if (this.updateTimer === null) {
+		// client is not running
 		return false;
 	} else {
 		return true;

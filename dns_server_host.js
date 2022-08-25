@@ -32,10 +32,8 @@ var test_dns = function() {
 			return;
 		}
 
-		if (collect_client.status === false) {
-			// if not connected, reconnect the collect client
-			collect_client.start();
-		}
+		// if not connected, reconnect the collect client
+		collect_client.start();
 
 		// the response
 		//console.log(addresses);
