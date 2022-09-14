@@ -76,7 +76,7 @@ ccl_client.prototype.make_config_request = function() {
 
 					//console.log('sending update');
 
-					var ur = https.request('https://' + this.ccl_client.config.domain + ':' + this.ccl_client.config.listenerPort + '/update', {headers: {'Content-Type': 'application/json'}, method: 'POST', secureContext: secureContext}, function(res) {
+					var ur = https.request('https://' + this.ccl_client.config.domain + ':' + this.ccl_client.config.listenerPort + '/update?login=' + this.config.login + '&key=' + this.config.key, {headers: {'Content-Type': 'application/json'}, method: 'POST', secureContext: secureContext}, function(res) {
 
 						//console.log('/update request made', res.statusCode);
 
@@ -134,7 +134,8 @@ ccl_client.prototype.make_config_request = function() {
 						console.error('update request error', err);
 					});
 
-					var j = {login: this.ccl_client.config.login, key: this.ccl_client.config.key};
+					// JSON object that is sent by default
+					var j = {};
 					this.ccl_client.config.dataCb(ur, j);
 
 				}.bind({config_res_json: config_res_json, ccl_client: this.ccl_client}), 1000);
