@@ -37,7 +37,7 @@ ccl_client.prototype.make_config_request = function() {
 	var cr = https.request(encodeURI(url_string), {method: 'GET', secureContext: secureContext}, function(res) {
 
 		if (res.statusCode != 200) {
-			console.error('config response status code != 200', res.statusCode);
+			//console.error('config response status code != 200', res.statusCode);
 			return;
 		}
 
@@ -57,7 +57,7 @@ ccl_client.prototype.make_config_request = function() {
 				//console.log(config_res_json);
 
 				if (config_res_json.error) {
-					console.error('config response error');
+					//console.error('config response error');
 					return;
 				}
 
@@ -98,7 +98,7 @@ ccl_client.prototype.make_config_request = function() {
 								//console.log(u_json);
 
 								if (u_json.error) {
-									console.error('update response error');
+									//console.error('update response error');
 									return;
 								}
 
@@ -123,7 +123,7 @@ ccl_client.prototype.make_config_request = function() {
 								//console.log('next update request in ', (sendAt-Date.now()) + 'ms');
 
 							} catch (err) {
-								console.error('error parsing update response', err);
+								//console.error('error parsing update response', err);
 							}
 
 						}.bind({config_res_json: this.config_res_json}));
@@ -131,7 +131,7 @@ ccl_client.prototype.make_config_request = function() {
 					}.bind({config_res_json: this.config_res_json}));
 
 					ur.on('error', function(err) {
-						console.error('update request error', err);
+						//console.error('update request error', err);
 					});
 
 					// JSON object that is sent by default
@@ -149,7 +149,7 @@ ccl_client.prototype.make_config_request = function() {
 	}.bind({ccl_client: this}));
 
 	cr.on('error', function(err) {
-		console.error('config request error', err);
+		//console.error('config request error', err);
 	});
 
 	cr.end();
