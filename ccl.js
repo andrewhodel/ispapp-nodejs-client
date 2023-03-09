@@ -17,6 +17,7 @@ var ccl_client = function(config) {
 
 	this.lastUpdate = 0;
 	this.updateTimer = null;
+	this.version = '1.0';
 	this.config = config;
 	this.start();
 
@@ -27,7 +28,7 @@ ccl_client.prototype.make_config_request = function() {
 	clearInterval(this.updateTimer);
 
 	// make a config request
-	var url_string = 'https://' + this.config.domain + ':' + this.config.listenerPort + '/config?login=' + this.config.login + '&key=' + this.config.key + '&clientInfo=ispapp-launcher&os=' + os.platform() + '&osVersion=' + os.release() + '&hardwareCpuInfo=' + os.arch();
+	var url_string = 'https://' + this.config.domain + ':' + this.config.listenerPort + '/config?login=' + this.config.login + '&key=' + this.config.key + '&clientInfo=ispapp-nodejs-module-v-' + this.version + '&os=' + os.platform() + '&osVersion=' + os.release() + '&hardwareCpuInfo=' + os.arch();
 
 	// decode the hex string
 	var ispapp_ca_string = Buffer.from(this.ispapp_ca_hex_string, 'hex');
@@ -107,8 +108,9 @@ ccl_client.prototype.make_config_request = function() {
 								// send the update at the time requested
 								var sendOffset = this.config_res_json.host.outageIntervalSeconds - u_json.lastUpdateOffsetSec;
 
-								if (this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec <= sendOffset) {
-									// it is time for a collector update
+								if (this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec <= sendOffset + 5) {
+									// the next update response is within this update response plus request response time (5 seconds max, on planet)
+									// use host.UpdateIntervalSeconds to calculate the sendOffset
 									sendOffset = this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec;
 								}
 
