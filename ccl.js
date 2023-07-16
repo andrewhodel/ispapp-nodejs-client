@@ -39,6 +39,12 @@ ccl_client.prototype.make_config_request = function() {
 
 		if (res.statusCode != 200) {
 			//console.error('config response status code != 200', res.statusCode);
+
+			setTimeout(function() {
+				// reconnect
+				this.ccl_client.make_config_request();
+			}.bind({ccl_client: this.ccl_client}), 10000);
+
 			return;
 		}
 
@@ -59,6 +65,12 @@ ccl_client.prototype.make_config_request = function() {
 
 				if (config_res_json.error) {
 					//console.error('config response error');
+
+					setTimeout(function() {
+						// reconnect
+						this.ccl_client.make_config_request();
+					}.bind({ccl_client: this.ccl_client}), 10000);
+
 					return;
 				}
 
@@ -151,8 +163,14 @@ ccl_client.prototype.make_config_request = function() {
 	}.bind({ccl_client: this}));
 
 	cr.on('error', function(err) {
-		//console.error('config request error', err);
-	});
+		console.error('config request error', err);
+
+		setTimeout(function() {
+			// reconnect
+			this.ccl_client.make_config_request();
+		}.bind({ccl_client: this.ccl_client}), 10000);
+
+	}.bind({ccl_client: this}));
 
 	cr.end();
 
