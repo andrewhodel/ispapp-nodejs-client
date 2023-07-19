@@ -17,7 +17,7 @@ var ccl_client = function(config) {
 
 	this.lastUpdate = 0;
 	this.updateTimer = null;
-	this.version = '1.0';
+	this.version = '1.1';
 	this.config = config;
 	this.start();
 
@@ -117,11 +117,12 @@ ccl_client.prototype.make_config_request = function() {
 
 								this.lastUpdate = Date.now();
 
-								// send the update at the time requested
+								// use the outage update wait
 								var sendOffset = this.config_res_json.host.outageIntervalSeconds - u_json.lastUpdateOffsetSec;
 
-								if (this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec <= sendOffset + 5) {
-									// the next update response is within this update response plus request response time (5 seconds max, on planet)
+								if (this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec <= sendOffset) {
+									// the col update wait is less than or equal to the outage update wait
+
 									// use host.UpdateIntervalSeconds to calculate the sendOffset
 									sendOffset = this.config_res_json.host.updateIntervalSeconds - u_json.lastColUpdateOffsetSec;
 								}
